@@ -1,0 +1,85 @@
+/* ==========================================================
+   🌐 GLOBAL BROWSER RESET (Fixes the White Top Margin Gap)
+   ========================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background-color: #020917; /* Prevents background flickering on screen navigation */
+  overflow-x: hidden;
+}
+
+.App {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==========================================================
+   🎨 EXISTED NEXTGEN COMPONENT STYLES (Kept Identical)
+   ========================================================== */
+
+/* Main background container for the landing page */
+.App-header {
+  /* Creating a dark professional gradient background */
+  background: linear-gradient(135deg, #020917 0%, #010c1a 100%);
+  min-height: 100vh; 
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: calc(10px + 2vmin);
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Styling for the main headline title */
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  /* Adding a subtle shadow to make text pop */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling for the sub-text paragraphs */
+p {
+  font-size: 1.2rem;
+  opacity: 0.9; /* Making the text slightly transparent for a modern look */
+  margin-bottom: 2rem;
+}
+
+/* styling for the feature cards with glass effect and smooth transitions */
+.feature-card {
+  background: rgba(255, 255, 255, 0.08); 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); 
+  padding: 40px 30px;
+  border-radius: 20px;
+  width: 320px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Hover effect to make the card stand out and lift slightly */
+.feature-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Styling for the Apply Button Hover state */
+.apply-button-hover:hover {
+    background-color: #7c3aed !important;
+    border-color: #7c3aed !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(124, 58, 237, 0.3);
+}
+
+/* Update this in your CSS file for the matching purple placeholder */
+.custom-placeholder::placeholder {
+    color: rgba(216, 180, 254, 0.5) !important;
+}
