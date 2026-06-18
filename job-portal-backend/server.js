@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
+const path = require('path'); // 🎯 FIXED: Imported path module for handling folder paths safely
 
 // Load environment variables from .env file
 dotenv.config();
@@ -12,6 +13,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// 🎯 CRITICAL REAL-WORLD FIX: Expose the uploads directory to serve uploaded CV files publicly
+// This allows files like http://localhost:5000/uploads/ProposalFormat.pdf to load smoothly
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const dbURI = process.env.MONGO_URI;
 
