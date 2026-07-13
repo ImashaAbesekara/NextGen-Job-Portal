@@ -54,7 +54,10 @@ const Login = () => {
 
                 // Contextual rule-based conditional smart routing logic evaluating profile authorization states
                 setTimeout(() => {
-                    if (response.data.role === 'employer') {
+                    // 🚀 Administrative Role configuration to navigate to Corporate Dashboards
+                    if (response.data.role === 'admin') {
+                        navigate('/admin-dashboard');
+                    } else if (response.data.role === 'employer') {
                         navigate('/employer-dashboard');
                     } else if (response.data.role === 'seeker') {
                         navigate('/dashboard'); // Sourced from your Job Seeker dynamic dashboard route
@@ -65,10 +68,13 @@ const Login = () => {
             }
         } catch (error) {
             console.error(error);
-            // Process exceptional responses gracefully using specialized notification structures
+            // 🎯 FIXED EXCEPTION BINDING NODE:
+            // Intercepts the custom 403 Forbidden messages thrown during pending corporate validation verification checks
             const errorMsg = error.response?.data?.message || 'Login Failed! Check your verification tokens.';
+
             toast.error(`${errorMsg} ❌`, {
-                style: { background: '#1e293b', color: '#fff', border: '1px solid #ef4444' }
+                style: { background: '#1e293b', color: '#fff', border: '1px solid #ef4444' },
+                duration: 4000
             });
         }
     };
@@ -162,7 +168,7 @@ const Login = () => {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        color: '#94a3b8', // Beautiful sleek slate color matching input borders
+        color: '#94a3b8',
         fontSize: '16px',
         padding: '0',
         display: 'flex',
@@ -232,7 +238,6 @@ const Login = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        {/* 🎯 RENDERING CRISP SVG REACT ICONS INSTEAD OF CHOPPY TEXT EMOJIS */}
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}

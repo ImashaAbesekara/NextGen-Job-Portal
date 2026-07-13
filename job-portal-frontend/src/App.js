@@ -1,56 +1,78 @@
-import React, { useState } from 'react'; // Managed tabs globally
+import React, { useState } from 'react';
 import './App.css';
-// Import essential routing components from react-router-dom library
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
-// 🚀 IMPORT TOASTCONTAINER AND STYLES FOR GLOBAL NOTIFICATIONS
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Import custom application components and view screens
 import Navbar from './Navbar';
 import LandingPage from './landingPage';
 import Login from './Login';
 import Register from './Register';
 import Dashboard from './Dashboard';
-import EmployerDashboard from './EmployerDashboard'; // Ensure this file is inside 'src' folder
+import EmployerDashboard from './EmployerDashboard';
+// IMPORT: Import the premium Admin Control Center UI
+import AdminDashboard from './AdminDashboard';
+
+// AI INTEGRATION NODE: Import the generative AI application view layer into the router mapping architecture
+import AiAssistant from './AiAssistant';
+
+// SECURITY LAYER: Route protection mechanism specifically targeting the corporate administrator scope
+const AdminProtectedRoute = ({ children }) => {
+    // Retrieve secure authentication parameters directly from client storage nodes
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+
+    // Authorization Check: Enforce validation properties strictly against session keys
+    if (!token || role !== 'admin') {
+        console.warn("Administrative guard access denied. Rerouting agent to login gate.");
+        return <Navigate to="/login" replace />;
+    }
+    return children;
+};
 
 function App() {
-    // 🎯 Dynamic State to track which dashboard view is active ('overview' or 'search')
-    // Shared between Navbar.js (for switching) and Dashboard.js (for rendering content)
+    // Shared state management to control sub-view rendering inside the Job Seeker dashboard view layers
     const [activeTab, setActiveTab] = useState('overview');
 
     return (
         <Router>
             <div className="App" style={{ minHeight: '100vh', backgroundColor: '#0f172a' }}>
 
-                {/* 🚀 Global Navbar: Now perfectly receiving activeTab state props */}
-                <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+                {/* Global Navigation Header (Self-hiding engine triggered dynamically inside secured workspace layouts) */}
+                <Navbar />
 
                 <Routes>
-                    {/* Route targeting the main public landing gateway page */}
                     <Route path="/" element={<LandingPage />} />
-
-                    {/* Route targeting the user identity verification login screen */}
                     <Route path="/login" element={<Login />} />
-
-                    {/* Route targeting the account creation registration screen */}
                     <Route path="/register" element={<Register />} />
 
-                    {/* 📊 Secured Seeker Dashboard: Receiving activeTab to change content dynamically */}
+                    {/* Secured Seeker Dashboard Context */}
                     <Route
                         path="/dashboard"
                         element={<Dashboard activeTab={activeTab} setActiveTab={setActiveTab} />}
                     />
 
-                    {/* 🏢 Secured Employer Dashboard Route */}
+                    {/* Secured Employer Dashboard Context */}
                     <Route path="/employer-dashboard" element={<EmployerDashboard />} />
 
-                    {/* Catch-all safety route: Automatically redirects any unknown URLs back to the home landing page */}
+                    {/* Secured Corporate Administrator Dashboard Context with active Route Guard protection */}
+                    <Route
+                        path="/admin-dashboard"
+                        element={
+                            <AdminProtectedRoute>
+                                <AdminDashboard />
+                            </AdminProtectedRoute>
+                        }
+                    />
+
+                    {/* AI INTEGRATION NODE: Inject the custom standalone AI assistant route into the system application grid */}
+                    <Route path="/ai-assistant" element={<AiAssistant />} />
+
+                    {/* Fallback routing layer to auto-redirect unmatched route paths back to home anchor */}
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
 
-                {/* 🔥 GLOBAL TOAST CONTAINER PROVIDING PREMIUM NOTIFICATIONS ACROSS ALL PAGES */}
+                {/* GLOBAL TOAST CONTAINER */}
                 <ToastContainer
                     position="top-right"
                     autoClose={3000}
@@ -61,7 +83,7 @@ function App() {
                     pauseOnFocusLoss
                     draggable
                     pauseOnHover
-                    theme="dark" // Beautiful dark theme to match NextGen design blueprint
+                    theme="dark"
                 />
             </div>
         </Router>

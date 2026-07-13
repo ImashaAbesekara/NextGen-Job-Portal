@@ -34,15 +34,25 @@ const registerUser = async (req, res) => {
             company
         });
 
-        // Respond with HTTP 201 Created and return non-sensitive user metadata profile
+        // 🎯 SMART ARCHITECTURE INTEGRATION:
+        // Checking if the registered user is an employer to pass institutional routing meta flags
+        if (user.role === 'employer') {
+            return res.status(201).json({
+                success: true,
+                isPendingEmployer: true,
+                message: 'Registration successful! Your corporate account is pending administrative approval. Please await institutional verification before logging in. 🎉'
+            });
+        }
+
+        // Respond with HTTP 201 Created and return non-sensitive user metadata profile for job seekers
         res.status(201).json({
+            success: true,
             message: 'User Registered Successfully and Secured! 🎉',
             user: {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                role: user.role,
-                company: user.company
+                role: user.role
             }
         });
     } catch (err) {
@@ -78,13 +88,29 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid Email/Username or Password!' });
         }
 
+        // ============================================================
+        // 🎯 🛡️ SECURED INSTITUTIONAL GATEWAY CONTROL NODE:
+        // Prevent unauthorized access into endpoints if the employer profile is not active
+        // ============================================================
+        if (user.role === 'employer' && user.status === 'pending') {
+            return res.status(403).json({
+                message: "Your corporate account is pending administrative approval. Please wait for institutional verification."
+            });
+        }
+
+        if (user.role === 'employer' && user.status === 'rejected') {
+            return res.status(403).json({
+                message: "Your corporate access request has been declined by NextGen administrators."
+            });
+        }
+        // ============================================================
+
         // Step C: Generate an authenticated JSON Web Token (JWT) encapsulating session states
         const token = jwt.sign(
             { id: user._id, role: user.role },
-            'secretkey123', // Hardcoded for testing; ideally sourced from process.env.JWT_SECRET
-            { expiresIn: '1d' } // Secure session state expires dynamically in 24 hours
+            process.env.JWT_SECRET,
+            { expiresIn: '1d' }
         );
-
         // Step D: Transmit secure HTTP 200 payload containing the authorization access token
         res.status(200).json({
             message: 'Login Successful! Welcome back to NextGen Portal! 🚀',
@@ -96,7 +122,6 @@ const loginUser = async (req, res) => {
                 email: user.email,
                 role: user.role,
                 company: user.company
-
             }
         });
 

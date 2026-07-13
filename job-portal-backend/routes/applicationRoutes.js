@@ -7,7 +7,8 @@ const path = require('path');
 const {
     getApplications,
     submitApplication,
-    updateApplicationStatus
+    updateApplicationStatus,
+    scheduleInterview
 } = require('../controllers/applicationController');
 
 // ⚙️ MULTER STORAGE CONFIGURATION
@@ -22,7 +23,7 @@ const storage = multer.diskStorage({
     }
 });
 
-// File filter to ensure only PDFs and Word documents are uploaded
+// File filter to ensure only PDFs and Word documents are allowed
 const fileFilter = (req, file, cb) => {
     const allowedExtensions = ['.pdf', '.docx', '.doc'];
     const ext = path.extname(file.originalname).toLowerCase();
@@ -33,16 +34,16 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB File Limit
 });
 
 
-// ==========================================
+// ============================================================================
 // 🌐 ROUTES DEFINITIONS
-// ==========================================
+// ============================================================================
 
 // Fetch all applications or filter by query streams
 router.get('/', getApplications);
@@ -50,7 +51,20 @@ router.get('/', getApplications);
 // Submit a new job application (Includes upload middleware for 'cv' file field)
 router.post('/', upload.single('cv'), submitApplication);
 
-// Update application status (Shortlist or Reject)
-router.put('/:id/status', updateApplicationStatus);
+// ============================================================================
+// STATUS UPDATE ROUTE
+// Conditional interceptor: If incoming payload status is 'Interview Scheduled',
+// route the execution context straight to the 'scheduleInterview' controller.
+// ============================================================================
+router.put('/:id/status', (req, res, next) => {
+    if (req.body.status === 'Interview Scheduled') {
+        return scheduleInterview(req, res, next);
+    }
+    return updateApplicationStatus(req, res, next);
+});
+
+// Endpoint: /api/applications/:id/schedule
+// Alternate endpoint to explicitly invoke the interview provisioning sequence
+router.put('/:id/schedule', scheduleInterview);
 
 module.exports = router;

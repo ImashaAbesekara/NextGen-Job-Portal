@@ -61,18 +61,20 @@ function Register() {
 
             // Evaluate if server context confirms safe insertion lifecycle creation
             if (response.status === 201) {
-                // Show dynamic modern toast for successful registration lifecycle execution
-                toast.success("Account Created Successfully! Please Sign In. 🎉", {
+                // 🎯 SMART DYNAMIC TOAST NOTIFICATION:
+                // Displays the explicit review instruction message passed back from backend nodes
+                const successMsg = response.data.message || "Account Created Successfully! 🎉";
+
+                toast.success(successMsg, {
                     style: { background: '#1e293b', color: '#fff', border: '1px solid #10b981' },
-                    duration: 3000
+                    duration: 4000
                 });
 
                 // Short delay to let the user experience the professional success toast animation
                 setTimeout(() => {
-                    // 🎯 FIXED: Industry standard architecture logic. 
                     // Redirect BOTH employers and seekers strictly to login to safely clear credentials and build JWT token streams.
                     navigate('/login');
-                }, 1500);
+                }, 2000);
             }
         } catch (error) {
             // Processing server exception feedback structures gracefully using elegant toast updates
@@ -93,7 +95,7 @@ function Register() {
             {/* Split Screen Premium Landscape Interface Layout Box */}
             <div style={splitCardStyle}>
 
-                {/* Left Side: NextGen Enterprise Branding Info Showcase Panel (Compressed for Form Space) */}
+                {/* Left Side: NextGen Enterprise Branding Info Showcase Panel */}
                 <div style={leftBrandingSideStyle}>
                     <div style={brandingContentStyle}>
                         <h1 style={mainBrandTitleStyle}>NextGen</h1>
@@ -106,7 +108,7 @@ function Register() {
                     </div>
                 </div>
 
-                {/* Right Side: Interactive Secured Registration Form Input Console Panel (Expanded Layout) */}
+                {/* Right Side: Interactive Secured Registration Form Input Console Panel */}
                 <div style={rightFormSideStyle}>
                     <h2 style={titleStyle}>Create Account</h2>
                     <p style={subtitleStyle}>Get started by setting up your universal credentials</p>
@@ -157,7 +159,6 @@ function Register() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                            {/* 🎯 FIXED: Crisp high-performance React Icons integrated cleanly */}
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -217,7 +218,6 @@ function Register() {
 }
 
 // --- NextGen Smart Premium Responsive Landscape Style Architecture ---
-
 const pageContainerStyle = {
     display: 'flex',
     justifyContent: 'center',
